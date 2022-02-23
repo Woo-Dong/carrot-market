@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import Input from "../../components/input";
+import Input from "@components/input";
 
 const Upload: NextPage = () => {
   return (

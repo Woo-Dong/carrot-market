@@ -1,11 +1,22 @@
+import type { UseFormRegisterReturn } from "react-hook-form";
+
 interface InputPros {
   label: string;
   name: string;
   kind?: "text" | "phone" | "price";
-  [key: string]: any;
+  type: string;
+  register: UseFormRegisterReturn;
+  required?: boolean;
 }
 
-export default function Input({ label, name, kind, ...rest }: InputPros) {
+export default function Input({
+  label,
+  name,
+  kind,
+  type,
+  register,
+  required,
+}: InputPros) {
   return (
     <div>
       <label className="mb-1 text-sm font-medium text-gray-700" htmlFor={name}>
@@ -16,9 +27,10 @@ export default function Input({ label, name, kind, ...rest }: InputPros) {
           <input
             className="apppearance-none w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placehodler-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
             id={name}
-            type="text"
+            required={required}
+            type={type}
             placeholder={name}
-            {...rest}
+            {...register}
           />
         </div>
       ) : null}
@@ -30,9 +42,10 @@ export default function Input({ label, name, kind, ...rest }: InputPros) {
           <input
             className="apppearance-none pl-7 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placehodler-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
             id="price"
-            type="text"
+            required={required}
+            type={type}
             placeholder="0.00"
-            {...rest}
+            {...register}
           />
           <div className="absolute right-0 pointer-events-none pr-3 flex items-center">
             <span className="text-gray-500">USD</span>
@@ -46,9 +59,10 @@ export default function Input({ label, name, kind, ...rest }: InputPros) {
           </span>
           <input
             id="phone"
-            type="text"
+            required={required}
+            type={type}
             className="apppearance-none w-full px-3 py-2 border border-gray-300 rounded-md rounded-l-none shadow-sm placehodler-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-            {...rest}
+            {...register}
           />
         </div>
       ) : null}
