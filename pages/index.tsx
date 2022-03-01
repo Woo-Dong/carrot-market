@@ -1,23 +1,46 @@
 import type { NextPage } from "next";
 import Layout from "@components/layout";
+import Head from "next/head";
 import Item from "@components/item";
+import useUser from "@libs/client/useUser";
+import useSWR from "swr";
+import FloatingButton from "@components/floating-button";
+import { Product } from "@prisma/client";
+
+interface ProductWithCount extends Product {
+  _count: { favs: number };
+}
+
+interface ProductResponse {
+  ok: boolean;
+  products: ProductWithCount[];
+}
 
 const Home: NextPage = () => {
+  const { user, isLoading } = useUser();
+  const { data } = useSWR<ProductResponse>("/api/products");
+
+  console.log("data: ", data);
   return (
     <Layout title="Home" hasTabBar>
+      <Head>
+        <title>Home</title>
+      </Head>
       <div className="flex flex-col space-y-5 py-10 divide-y">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, i) => {
+        {data?.products?.map((product) => {
           return (
             <Item
-              key={i}
-              id={i}
-              title="New iPhone 14"
-              price={95}
+              key={product.id}
+              id={product.id}
+              title={product.name}
+              price={product.price}
               description="Black"
+              comments={1}
+              hearts={product._count.favs}
             />
           );
         })}
-        <button className="fixed hover:bg-orange-500 transition-colors bottom-24 right-5 shadow-xl bg-orange-400 rounded-full p-4 text-white">
+        <FloatingButton href="/products/upload">
           <svg
             className="h-6 w-6"
             xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +56,7 @@ const Home: NextPage = () => {
               d="M12 6v6m0 0v6m0-6h6m-6 0H6"
             />
           </svg>
-        </button>
+        </FloatingButton>
       </div>
     </Layout>
   );
